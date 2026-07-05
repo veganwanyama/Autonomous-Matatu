@@ -173,11 +173,15 @@ class Road:
         # road surface
         pygame.draw.rect(surf, ROAD, (ROAD_LEFT, 0, ROAD_WIDTH, HEIGHT))
 
+        # road edge lines
+        pygame.draw.rect(surf, LANE_LINE, (ROAD_LEFT - 4, 0, 4, HEIGHT))
+        pygame.draw.rect(surf, LANE_LINE, (ROAD_RIGHT, 0, 4, HEIGHT))
+
         # zebra crossings
         for z in self.zebra_stripes:
             top = z["y"]
             stripe_h = 8
-            gap = 8
+            gap = 4
             y = top
             while y < top + 60:
                 color = ZEBRA_LIGHT
