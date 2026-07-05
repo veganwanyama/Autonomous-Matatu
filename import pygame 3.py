@@ -21,7 +21,7 @@ road_w = road_end - road_start
 num_lanes = 3
 lane_w = road_w // num_lanes
 
-# car size - tweaked this a few times to look right
+# car size - tweaked this a few times to look better
 CAR_W = 46
 CAR_H = 78
 
@@ -32,7 +32,7 @@ LANE_LINE = (230, 230, 230)
 ZEBRA_WHITE = (240, 240, 240)
 ZEBRA_DARK = (40, 40, 40)
 
-# matatu is yellow with red and blue stripes (classic kenya colours)
+# matatu is yellow with red and blue stripes 
 MATATU_YELLOW = (240, 195, 25)
 STRIPE_RED = (200, 30, 30)
 STRIPE_BLUE = (25, 90, 200)
