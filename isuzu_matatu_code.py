@@ -11,9 +11,9 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("ISUZU AUTONOMOUS MATATU")
 
 #Road and lane settings
-ROAD_MARGIN = 40                       # grass/shoulder width on each side
+ROAD_MARGIN = 0                       # grass/shoulder width on each side
 ROAD_LEFT = ROAD_MARGIN
-ROAD_RIGHT = WIDTH - ROAD_MARGIN
+ROAD_RIGHT = ROAD_MARGIN
 ROAD_WIDTH = ROAD_RIGHT - ROAD_LEFT
 LANE_COUNT = 3
 LANE_WIDTH = ROAD_WIDTH // LANE_COUNT
