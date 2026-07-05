@@ -1,3 +1,15 @@
+import pygame
+import random
+import os
+import sys
+
+pygame.init()
+
+WIDTH, HEIGHT = 420, 680
+FPS = 60
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("ISUZU AUTONOMOUS MATATU")
+
 #Road and lane settings
 ROAD_MARGIN = 40                       # grass/shoulder width on each side
 ROAD_LEFT = ROAD_MARGIN
@@ -183,3 +195,117 @@ class Road:
                 color = ZEBRA_LIGHT
                 pygame.draw.rect(surf, color, (ROAD_LEFT, int(y), ROAD_WIDTH, stripe_h))
                 y += stripe_h + gap
+
+
+# Game state
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("ISUZU AUTONOMOUS MATATU")
+    clock = pygame.time.Clock()
+    font_big = pygame.font.SysFont("arial", 42, bold=True)
+    font_mid = pygame.font.SysFont("arial", 22, bold=True)
+    font_small = pygame.font.SysFont("arial", 16)
+
+    def new_game():
+        return {
+            "player": Matatu(),
+            "road": Road(),
+            "cars": [],
+            "peds": [],
+            "speed": 5.0,
+            "score": 0,
+            "car_timer": 0,
+            "car_interval": 70,
+            "ped_timer": 0,
+            "ped_interval": 130,
+            "game_over": False,
+        }
+
+    state = new_game()
+
+    running = True
+    while running:
+        dt = clock.tick(FPS)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key in (pygame.K_ESCAPE, pygame.K_q):
+                    running = False
+                elif not state["game_over"]:
+                    if event.key in (pygame.K_LEFT, pygame.K_a):
+                        state["player"].move_left()
+                    elif event.key in (pygame.K_RIGHT, pygame.K_d):
+                        state["player"].move_right()
+                else:
+                    if event.key == pygame.K_r:
+                        state = new_game()
+
+        if not state["game_over"]:
+            speed = state["speed"]
+
+            # difficulty ramps up slowly with score
+            state["speed"] = min(12.0, 5.0 + state["score"] / 300.0)
+
+            state["player"].update()
+            state["road"].update(speed)
+
+            # spawn other cars
+            state["car_timer"] += 1
+            if state["car_timer"] >= state["car_interval"]:
+                state["car_timer"] = 0
+                state["car_interval"] = random.randint(50, 100)
+                lane = random.randint(0, LANE_COUNT - 1)
+                state["cars"].append(OtherCar(lane, speed + random.uniform(-1, 2)))
+
+            # update obstacles
+            for c in state["cars"]:
+                c.update()
+            state["cars"] = [c for c in state["cars"] if not c.off_screen()]
+
+
+            # score by distance survived
+            state["score"] += 1
+
+            # collision detection
+            player_rect = state["player"].rect
+            for c in state["cars"]:
+                if player_rect.colliderect(c.rect):
+                    state["game_over"] = True
+
+        # ---------------- DRAW ----------------
+        state["road"].draw(screen)
+
+        for p in state["peds"]:
+            p.draw(screen)
+        for c in state["cars"]:
+            c.draw(screen)
+        state["player"].draw(screen)
+
+        # HUD
+        score_text = font_mid.render(f"Score: {state['score']}", True, SCORE_COLOR)
+        screen.blit(score_text, (10, 10))
+
+        if state["game_over"]:
+            overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 160))
+            screen.blit(overlay, (0, 0))
+
+            go_text = font_big.render("GAME OVER", True, GAMEOVER_RED)
+            screen.blit(go_text, go_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 40)))
+
+            final_score = font_mid.render(f"Final Score: {state['score']}", True, WHITE)
+            screen.blit(final_score, final_score.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 10)))
+
+            restart_text = font_small.render("Press R to restart, ESC to quit", True, WHITE)
+            screen.blit(restart_text, restart_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50)))
+
+        pygame.display.flip()
+
+    pygame.quit()
+    sys.exit()
+
+if __name__ == "__main__":
+    main()
