@@ -97,12 +97,6 @@ class Matatu:
         pygame.draw.rect(surf, MATATU_STRIPE, (x + w // 2 - stripe_w - 2, y, stripe_w, h))
         pygame.draw.rect(surf, MATATU_STRIPE2, (x + w // 2 + 2, y, stripe_w, h))
 
-        # wheels
-        pygame.draw.rect(surf, BLACK, (x - 3, y + 10, 5, 16))
-        pygame.draw.rect(surf, BLACK, (x + w - 2, y + 10, 5, 16))
-        pygame.draw.rect(surf, BLACK, (x - 3, y + h - 26, 5, 16))
-        pygame.draw.rect(surf, BLACK, (x + w - 2, y + h - 26, 5, 16))
-
         # label
         font = pygame.font.SysFont("arial", 13, bold=True)
         text = font.render("MATATU", True, BLACK)
@@ -138,12 +132,6 @@ class OtherCar:
     def draw(self, surf):
         x, y, w, h = int(self.x), int(self.y), self.width, self.height
         pygame.draw.rect(surf, self.color, (x, y, w, h), border_radius=8)
-        pygame.draw.rect(surf, WINDOW_TINT, (x + 6, y + 8, w - 12, 16), border_radius=3)
-        pygame.draw.rect(surf, WINDOW_TINT, (x + 6, y + h - 26, w - 12, 16), border_radius=3)
-        pygame.draw.rect(surf, BLACK, (x - 3, y + 10, 5, 16))
-        pygame.draw.rect(surf, BLACK, (x + w - 2, y + 10, 5, 16))
-        pygame.draw.rect(surf, BLACK, (x - 3, y + h - 26, 5, 16))
-        pygame.draw.rect(surf, BLACK, (x + w - 2, y + h - 26, 5, 16))
 
 #Road setup
 class Road:
