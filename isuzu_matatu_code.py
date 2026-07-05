@@ -173,18 +173,6 @@ class Road:
         # road surface
         pygame.draw.rect(surf, ROAD, (ROAD_LEFT, 0, ROAD_WIDTH, HEIGHT))
 
-        # lane dividing lines (dashed), 2 internal dividers for 3 lanes
-        for lane_i in range(1, LANE_COUNT):
-            x = ROAD_LEFT + lane_i * LANE_WIDTH
-            y = -self.dash_len + self.scroll
-            while y < HEIGHT:
-                pygame.draw.rect(surf, LANE_LINE, (x - 2, y, 4, self.dash_len))
-                y += self.dash_len + self.gap_len
-
-        # road edge lines
-        pygame.draw.rect(surf, LANE_LINE, (ROAD_LEFT - 4, 0, 4, HEIGHT))
-        pygame.draw.rect(surf, LANE_LINE, (ROAD_RIGHT, 0, 4, HEIGHT))
-
         # zebra crossings
         for z in self.zebra_stripes:
             top = z["y"]
